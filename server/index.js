@@ -26,9 +26,9 @@ app.post('/scan', async (req, res) => {
 
   await scanDirectory(dirPath, res);
 });
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+// app.get('/', (req, res) => {
+//   res.send('Hello World!');
+// });
 
 app.get('*', (req, res) => { 
   res.sendFile(path.join(clientBuildPath, 'index.html'));
