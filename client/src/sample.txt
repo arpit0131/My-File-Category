@@ -1,0 +1,53 @@
+// src/App.js
+
+import React, { useState } from 'react';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+
+function App() {
+  const [dirPath, setDirPath] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await axios.post('http://localhost:9090/scan', { dirPath });
+      if (response.data.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response ? error.response.data.message : error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="App">
+      <h1>File Categorizer</h1>
+      <form onSubmit={handleSubmit} className="form-container">
+        <label>
+          Directory Path:
+          <input
+            type="text"
+            value={dirPath}
+            onChange={(e) => setDirPath(e.target.value)}
+            placeholder="Enter directory path"
+          />
+        </label>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Processing...' : 'Categorize Files'}
+        </button>
+      </form>
+      <ToastContainer />
+    </div>
+  );
+}
+
+export default App;
